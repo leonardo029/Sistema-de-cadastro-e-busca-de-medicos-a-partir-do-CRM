@@ -8,7 +8,7 @@ void print_menu(){
     printf("2 - Remover medico\n");
     printf("3 - Buscar medico\n");
     printf("4 - Numero de medicos cadastrados\n");
-    printf("5 - Sair\n");
+    printf("0 - Sair\n");
     printf("-------------------------------------------\n");
 
 }
@@ -36,14 +36,14 @@ int main(){
             case 4:
                 break;
             
-            case 5:
+            case 0:
                 break;
             default:
                 printf("Erro!!\nOpcao selecionada nao existe. Insira novamente!!\n");
 
         }
 
-    }while(option != 5);
+    }while(option != 0);
 
     return 0;
 }
