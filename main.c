@@ -8,5 +8,7 @@ int main(){
     printf("Virtim testando\n");
     printf("Galo");
 
+    setlocale(LC_ALL,NULL);
+
     return 0;
 }
