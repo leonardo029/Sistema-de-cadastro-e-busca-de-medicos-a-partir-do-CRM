@@ -54,19 +54,19 @@ int main(){
         switch(option){
 
             case 1:
-            		void register_doctor();
+            		register_doctor();
                 break;
             
             case 2:
-            		Node* remove_doctor();
+            		remove_doctor();
                 break;
 
             case 3:
-            		void search_doctor();
+            		search_doctor();
                 break;
             
             case 4:
-            		void tree_size();
+            		tree_size();
                 break;
             
             case 0:
