@@ -1,5 +1,32 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <locale.h>
+#include <string.h>
+
+typedef struct node{
+
+    int CRM;
+    struct node *left, *right;
+    struct doctor *data;
+
+}Node;
+
+typedef struct doctor{
+
+	    char *name_doctor;
+      int cpf;
+      int phone;
+      char *specialty;
+
+}Doctor;
+
+void register_doctor();
+
+Node* remove_doctor();
+
+void search_doctor();
+
+void tree_size();
 
 void print_menu(){
 
@@ -14,6 +41,8 @@ void print_menu(){
 }
 
 int main(){
+
+    setlocale(LC_ALL, "");
     
     int option;
 
@@ -25,15 +54,19 @@ int main(){
         switch(option){
 
             case 1:
+            		void register_doctor();
                 break;
             
             case 2:
+            		Node* remove_doctor();
                 break;
 
             case 3:
+            		void search_doctor();
                 break;
             
             case 4:
+            		void tree_size();
                 break;
             
             case 0:
