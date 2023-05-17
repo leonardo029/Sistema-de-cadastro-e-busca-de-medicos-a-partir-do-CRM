@@ -3,38 +3,46 @@
 #include <locale.h>
 #include <string.h>
 
+//Struct responsável por armazenar os dados que serão utilizados;
 typedef struct node{
 
+    //Informações do nó da árvore;
     int CRM;
     struct node *left, *right;
     struct doctor *data;
 
+    //Informações do médico;
+    char name_doctor[120];
+    int cpf;
+    int phone;
+    char specialty[30];
+
 }Node;
 
-typedef struct doctor{
-
-	    char *name_doctor;
-      int cpf;
-      int phone;
-      char *specialty;
-
-}Doctor;
-
+//Função responsável por cadastrar um novo médico;
 void register_doctor();
 
+//Função responsável por descadastrar um médico;
 Node* remove_doctor();
 
+//Função responsável por procurar um médico já cadastrado;
 void search_doctor();
 
-void tree_size();
+//Função responsável por retornar a altura da árvore;
+void tree_height();
 
+//Função responsável por iniciar os testes;
+void test();
+
+//Função responsável por printar o menu de opções do programa;
 void print_menu(){
 
     printf("-------------------MENU--------------------\n");
-    printf("1 - Cadastrar medico\n");
-    printf("2 - Remover medico\n");
-    printf("3 - Buscar medico\n");
-    printf("4 - Numero de medicos cadastrados\n");
+    printf("1 - Cadastrar médico\n");
+    printf("2 - Remover médico\n");
+    printf("3 - Buscar médico\n");
+    printf("4 - Altura da árvore\n");
+    printf("5 - Iniciar teste\n");
     printf("0 - Sair\n");
     printf("-------------------------------------------\n");
 
@@ -66,7 +74,11 @@ int main(){
                 break;
             
             case 4:
-            		tree_size();
+            		tree_height();
+                break;
+
+            case 5:
+            		test();
                 break;
             
             case 0:
