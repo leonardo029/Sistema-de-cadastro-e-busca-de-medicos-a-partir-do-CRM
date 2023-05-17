@@ -7,39 +7,86 @@
 typedef struct node{
 
     //Informações do nó da árvore;
-    int CRM;
+    unsigned int CRM;
     struct node *left, *right;
 
     //Informações do médico;
     char name_doctor[120];
-    int cpf;
-    int phone;
+    int cpf[11];
+    int phone[11];
     char specialty[30];
 
 }Node;
 
 //Função responsável por cadastrar um novo médico;
-void register_doctor();
+void register_doctor(Node *root, unsigned int crm){
+
+    if(root == NULL){
+
+        Node *newRoot = malloc(sizeof(Node));
+        newRoot->CRM = crm;
+        newRoot->right = NULL;
+        newRoot->left = NULL;
+
+        printf("Insira o nome do medico:\n");
+        getchar();
+        scanf("%[^\n]", newRoot->name_doctor);
+
+        printf("Insira o CPF do medico. Modelo: XXXXXXXXXXX\n");
+        scanf("%d", newRoot->cpf);
+
+        getchar();
+        printf("Insira a especialida do medico:\n");
+        scanf("%s", newRoot->specialty);
+
+        printf("Insira o telefone do medico:\n");
+        scanf("%d", newRoot->phone);
+
+    }
+
+    else{
+        if(crm < root->CRM){
+            return (register_doctor(root->left, crm));
+        }
+        else if(crm > root->CRM){
+            return (register_doctor(root->right, crm));
+        }
+        else{
+            printf("O CRM inserido ja consta em nosso banco de dados!\n\n");
+        }
+    }
+};
 
 //Função responsável por descadastrar um médico;
-Node* remove_doctor();
+//Node* remove_doctor();
 
 //Função responsável por procurar um médico já cadastrado;
-int search_doctor(Node *root, int key){
+int search_doctor(Node *root, unsigned int key){
 
 	if(root == NULL){
-        printf("Médico não encontrado em nosso banco de dados!\n");
+        printf("Medico nao encontrado em nosso banco de dados!\n");
         return(-1);
     }
   
     else{
         if(root->CRM == key){
-            printf("Médico encontrado!\n\n");
+            int i, j;
+
+            printf("Medico encontrado!\n\n");
             printf("Nome: %s\n", root->name_doctor);
             printf("Especialidade: %s\n", root->specialty);
-            printf("CRM: %d\n", root->CRM);
-            printf("CPF: %d\n", root->cpf);
-            printf("Telefone: %d\n\n", root->phone);
+            printf("CRM: %u\n", root->CRM);
+            printf("CPF: ");
+                for(i=0; i<12; i++){
+                    printf("%d", root->cpf[i]);
+                }
+            printf("\n");
+            printf("Telefone: ");
+                for(j=0; j<12; j++){
+                    printf("%d", root->phone[j]);
+                }
+            printf("\n\n");
+
             return(0);
         }
         else{
@@ -55,19 +102,19 @@ int search_doctor(Node *root, int key){
 };
 
 //Função responsável por retornar a altura da árvore;
-void tree_height();
+//void tree_height();
 
 //Função responsável por iniciar os testes;
-void test();
+//void test();
 
 //Função responsável por printar o menu de opções do programa;
 void print_menu(){
 
     printf("-------------------MENU--------------------\n");
-    printf("1 - Cadastrar médico\n");
-    printf("2 - Remover médico\n");
-    printf("3 - Buscar médico\n");
-    printf("4 - Altura da árvore\n");
+    printf("1 - Cadastrar medico\n");
+    printf("2 - Remover medico\n");
+    printf("3 - Buscar medico\n");
+    printf("4 - Altura da arvore\n");
     printf("5 - Iniciar teste\n");
     printf("0 - Sair\n");
     printf("-------------------------------------------\n");
@@ -78,44 +125,47 @@ int main(){
 
     setlocale(LC_ALL, "");
     Node *no = NULL;
-    int search_crm;
-    
+    unsigned int search_crm, register_crm;
     int option;
 
     do{
         print_menu();
         printf("Insira uma opcao: ");
         scanf("%d",&option);
+        printf("\n");
 
         switch(option){
 
             case 0:
+                printf("\nObrigado por utilizar nosso sistema!\nAte logo!\n\n");
                 break;
 
             case 1:
-            		register_doctor();
+                    printf("Insira o CRM a ser cadastrado:\n");
+                    scanf("%u", &register_crm);
+            		register_doctor(no, register_crm);
                 break;
             
             case 2:
-            		remove_doctor();
+            		//remove_doctor();
                 break;
 
             case 3:
-            		printf("Insira o CRM a ser buscado: ");
-                    scanf("%d", &search_crm);
+            		printf("Insira o CRM a ser buscado:\n");
+                    scanf("%u", &search_crm);
             		search_doctor(no, search_crm);
                 break;
             
             case 4:
-            		tree_height();
+            		//tree_height();
                 break;
 
             case 5:
-            		test();
+            		//test();
                 break;
 
             default:
-                printf("Erro!!\nOpcao selecionada nao existe. Insira novamente!!\n");
+                printf("\nErro!!\nA opcao selecionada nao existe. Tente novamente!!\n\n");
 
         }
 
