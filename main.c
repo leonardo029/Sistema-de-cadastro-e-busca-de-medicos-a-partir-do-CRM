@@ -9,7 +9,6 @@ typedef struct node{
     //Informações do nó da árvore;
     int CRM;
     struct node *left, *right;
-    struct doctor *data;
 
     //Informações do médico;
     char name_doctor[120];
@@ -26,7 +25,34 @@ void register_doctor();
 Node* remove_doctor();
 
 //Função responsável por procurar um médico já cadastrado;
-void search_doctor();
+int search_doctor(Node *root, int key){
+
+	if(root == NULL){
+        printf("Médico não encontrado em nosso banco de dados!\n");
+        return(-1);
+    }
+  
+    else{
+        if(root->CRM == key){
+            printf("Médico encontrado!\n\n");
+            printf("Nome: %s\n", root->name_doctor);
+            printf("Especialidade: %s\n", root->specialty);
+            printf("CRM: %d\n", root->CRM);
+            printf("CPF: %d\n", root->cpf);
+            printf("Telefone: %d\n\n", root->phone);
+            return(0);
+        }
+        else{
+            if(key < root->CRM){
+                return search_doctor(root->left, key);
+            }
+            else{
+                return search_doctor(root->right, key);
+            }
+        }
+    }
+  
+};
 
 //Função responsável por retornar a altura da árvore;
 void tree_height();
@@ -51,6 +77,8 @@ void print_menu(){
 int main(){
 
     setlocale(LC_ALL, "");
+    Node *no = NULL;
+    int search_crm;
     
     int option;
 
@@ -61,6 +89,9 @@ int main(){
 
         switch(option){
 
+            case 0:
+                break;
+
             case 1:
             		register_doctor();
                 break;
@@ -70,7 +101,9 @@ int main(){
                 break;
 
             case 3:
-            		search_doctor();
+            		printf("Insira o CRM a ser buscado: ");
+                    scanf("%d", &search_crm);
+            		search_doctor(no, search_crm);
                 break;
             
             case 4:
@@ -80,9 +113,7 @@ int main(){
             case 5:
             		test();
                 break;
-            
-            case 0:
-                break;
+
             default:
                 printf("Erro!!\nOpcao selecionada nao existe. Insira novamente!!\n");
 
