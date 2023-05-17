@@ -58,7 +58,74 @@ void register_doctor(Node *root, unsigned int crm){
 };
 
 //Função responsável por descadastrar um médico;
-//Node* remove_doctor();
+Node *remove_doctor(No *root, int chave)
+{
+    if (root == NULL)
+    {
+        printf("Médico não encontrado!");
+        return NULL;
+    }
+    else
+    {
+        if (root->CRM == chave)
+        {
+            if (root->left == NULL && root->right == NULL)
+            {
+                free(root);
+                printf("Médico removido!: %d ! \n", chave);
+                return NULL;
+            }
+            else
+            {
+                if (root->left != NULL && root->right != NULL)
+                {
+                    No *aux = root->left;
+                    while (aux->right != NULL)
+                    {
+                        aux = aux->right;
+                        root->CRM = aux->CRM;
+                        aux->CRM = chave;
+                        printf("Médico alterado: %d ! \n", chave);
+                        root->esquerdo = remove_doctor(root->left, chave);
+                        return root;
+                    }
+                }
+                else
+                {
+                    No *aux;
+                    if (root->left != NULL)
+                    {
+                        aux = root->left;
+                    }
+                    else
+                    {
+                        aux = root->right;
+                        free(root);
+                        printf("Médico associado removido: %d !\n", chave);
+                        return aux;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (chave < root->CRM)
+            {
+                root->left = remove_doctor(root->left, chave);
+            }
+            else
+            {
+                root->right = remove_doctor(root->right, chave);
+            }
+        }
+
+        //Depende da parte de altura pronta;
+        root->height = //Incompleto;
+        root = balance(root);
+
+        return root;
+    }
+}
 
 //Função responsável por procurar um médico já cadastrado;
 int search_doctor(Node *root, unsigned int key){
