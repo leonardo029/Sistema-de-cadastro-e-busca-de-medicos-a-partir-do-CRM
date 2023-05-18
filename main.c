@@ -9,6 +9,7 @@ typedef struct node{
     //Informações do nó da árvore;
     unsigned int CRM;
     struct node *left, *right;
+    short height;
 
     //Informações do médico;
     char name_doctor[120];
@@ -58,7 +59,7 @@ void register_doctor(Node *root, unsigned int crm){
 };
 
 //Função responsável por descadastrar um médico;
-Node *remove_doctor(No *root, int chave)
+Node *remove_doctor(Node *root, int chave)
 {
     if (root == NULL)
     {
@@ -79,20 +80,20 @@ Node *remove_doctor(No *root, int chave)
             {
                 if (root->left != NULL && root->right != NULL)
                 {
-                    No *aux = root->left;
+                    Node *aux = root->left;
                     while (aux->right != NULL)
                     {
                         aux = aux->right;
                         root->CRM = aux->CRM;
                         aux->CRM = chave;
                         printf("Médico alterado: %d ! \n", chave);
-                        root->esquerdo = remove_doctor(root->left, chave);
+                        root->left = remove_doctor(root->left, chave);
                         return root;
                     }
                 }
                 else
                 {
-                    No *aux;
+                    Node *aux;
                     if (root->left != NULL)
                     {
                         aux = root->left;
@@ -168,8 +169,11 @@ int search_doctor(Node *root, unsigned int key){
   
 };
 
+//Função responsável por calcular a altura de um nó da árvore;
+//short node_height();
+
 //Função responsável por retornar a altura da árvore;
-//void tree_height();
+//int tree_height();
 
 //Função responsável por iniciar os testes;
 //void test();
