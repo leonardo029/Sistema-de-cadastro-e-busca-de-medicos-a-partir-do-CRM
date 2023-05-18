@@ -222,7 +222,7 @@ Node *balancing(Node *root)
 //Função responsável por descadastrar um médico;
 Node *remove_doctor(Node *root, int key)
 {
-    if (root == NULL)
+    if (root == NULL) //Verifica se a raiz é nula caso seja, notifica o erro.
     {
         printf("Médico não encontrado!");
         return NULL;
