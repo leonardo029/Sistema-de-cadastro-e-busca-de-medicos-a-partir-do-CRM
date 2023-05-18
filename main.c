@@ -59,7 +59,7 @@ void register_doctor(Node **root, int crm){
 };
 
 //Função responsável por descadastrar um médico;
-Node *remove_doctor(Node *root, int chave)
+Node *remove_doctor(Node *root, int key)
 {
     if (root == NULL)
     {
@@ -68,12 +68,12 @@ Node *remove_doctor(Node *root, int chave)
     }
     else
     {
-        if (root->CRM == chave)
+        if (root->CRM == key)
         {
             if (root->left == NULL && root->right == NULL)
             {
                 free(root);
-                printf("Médico removido!: %d ! \n", chave);
+                printf("Médico removido!: %d ! \n", key);
                 return NULL;
             }
             else
@@ -85,9 +85,9 @@ Node *remove_doctor(Node *root, int chave)
                     {
                         aux = aux->right;
                         root->CRM = aux->CRM;
-                        aux->CRM = chave;
-                        printf("Médico alterado: %d ! \n", chave);
-                        root->left = remove_doctor(root->left, chave);
+                        aux->CRM = key;
+                        printf("Médico alterado: %d ! \n", key);
+                        root->left = remove_doctor(root->left, key);
                         return root;
                     }
                 }
@@ -102,7 +102,7 @@ Node *remove_doctor(Node *root, int chave)
                     {
                         aux = root->right;
                         free(root);
-                        printf("Médico associado removido: %d !\n", chave);
+                        printf("Médico associado removido: %d !\n", key);
                         return aux;
                     }
                 }
@@ -110,19 +110,18 @@ Node *remove_doctor(Node *root, int chave)
         }
         else
         {
-            if (chave < root->CRM)
+            if (key < root->CRM)
             {
-                root->left = remove_doctor(root->left, chave);
+                root->left = remove_doctor(root->left, key);
             }
             else
             {
-                root->right = remove_doctor(root->right, chave);
+                root->right = remove_doctor(root->right, key);
             }
         }
 
-        //Depende da parte de altura pronta;
-        //root->height =
-        //root = balance(root);
+        root->height = largest_value(node_height(root->left), node_height(root->right)) + 1;
+        root = balancing(root);
 
         return root;
     }
@@ -310,7 +309,7 @@ int main(){
 
     setlocale(LC_ALL, "");
     Node *no = NULL;
-    int search_crm, register_crm, option;
+    int search_crm, register_crm, remove_crm, option;
 
     do{
         print_menu();
@@ -331,7 +330,9 @@ int main(){
                 break;
             
             case 2:
-            		//remove_doctor();
+                    printf("Insira o CRM do médico a ser removido:\n");    
+                    scanf("%d", &remove_crm);         
+            		remove_doctor(no, remove_crm);
                 break;
 
             case 3:
