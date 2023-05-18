@@ -58,75 +58,6 @@ void register_doctor(Node **root, int crm){
     }
 };
 
-//Função responsável por descadastrar um médico;
-Node *remove_doctor(Node *root, int key)
-{
-    if (root == NULL)
-    {
-        printf("Médico não encontrado!");
-        return NULL;
-    }
-    else
-    {
-        if (root->CRM == key)
-        {
-            if (root->left == NULL && root->right == NULL)
-            {
-                free(root);
-                printf("Médico removido!: %d ! \n", key);
-                return NULL;
-            }
-            else
-            {
-                if (root->left != NULL && root->right != NULL)
-                {
-                    Node *aux = root->left;
-                    while (aux->right != NULL)
-                    {
-                        aux = aux->right;
-                        root->CRM = aux->CRM;
-                        aux->CRM = key;
-                        printf("Médico alterado: %d ! \n", key);
-                        root->left = remove_doctor(root->left, key);
-                        return root;
-                    }
-                }
-                else
-                {
-                    Node *aux;
-                    if (root->left != NULL)
-                    {
-                        aux = root->left;
-                    }
-                    else
-                    {
-                        aux = root->right;
-                        free(root);
-                        printf("Médico associado removido: %d !\n", key);
-                        return aux;
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (key < root->CRM)
-            {
-                root->left = remove_doctor(root->left, key);
-            }
-            else
-            {
-                root->right = remove_doctor(root->right, key);
-            }
-        }
-
-        root->height = largest_value(node_height(root->left), node_height(root->right)) + 1;
-        root = balancing(root);
-
-        return root;
-    }
-}
-
 //Função responsável por procurar um médico já cadastrado;
 void search_doctor(Node *root, int key){
 
@@ -286,6 +217,75 @@ Node *balancing(Node *root)
     }
 
     return root;
+}
+
+//Função responsável por descadastrar um médico;
+Node *remove_doctor(Node *root, int key)
+{
+    if (root == NULL)
+    {
+        printf("Médico não encontrado!");
+        return NULL;
+    }
+    else
+    {
+        if (root->CRM == key)
+        {
+            if (root->left == NULL && root->right == NULL)
+            {
+                free(root);
+                printf("Médico removido!: %d ! \n", key);
+                return NULL;
+            }
+            else
+            {
+                if (root->left != NULL && root->right != NULL)
+                {
+                    Node *aux = root->left;
+                    while (aux->right != NULL)
+                    {
+                        aux = aux->right;
+                        root->CRM = aux->CRM;
+                        aux->CRM = key;
+                        printf("Médico alterado: %d ! \n", key);
+                        root->left = remove_doctor(root->left, key);
+                        return root;
+                    }
+                }
+                else
+                {
+                    Node *aux;
+                    if (root->left != NULL)
+                    {
+                        aux = root->left;
+                    }
+                    else
+                    {
+                        aux = root->right;
+                        free(root);
+                        printf("Médico associado removido: %d !\n", key);
+                        return aux;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (key < root->CRM)
+            {
+                root->left = remove_doctor(root->left, key);
+            }
+            else
+            {
+                root->right = remove_doctor(root->right, key);
+            }
+        }
+
+        root->height = largest_value(node_height(root->left), node_height(root->right)) + 1;
+        root = balancing(root);
+
+        return root;
+    }
 }
 
 //Função responsável por iniciar os testes;
