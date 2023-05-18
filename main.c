@@ -9,7 +9,7 @@ typedef struct node{
     //Informações do nó da árvore;
     int CRM;
     struct node *left, *right;
-    short height;
+    int height;
 
     //Informações do médico;
     char name_doctor[120];
@@ -158,8 +158,8 @@ void search_doctor(Node *root, int key){
   
 };
 
-//Função responsável por calcular a altura de um nó da árvore;
-short node_height(Node *node)
+//Função responsável por calcular a altura de um nó da árvore (usar para auxiliar em outras funções);
+int node_height(Node *node)
 {
     if(node == NULL)
     {
@@ -171,7 +171,7 @@ short node_height(Node *node)
     }
 }
 
-//Função responsável por retornar a altura da árvore;
+//Função responsável por retornar a altura da árvore (usar no menu);
 int tree_height(Node *root)
 {
     if(root == NULL)
@@ -180,8 +180,8 @@ int tree_height(Node *root)
     }
     else
     {
-        int l = tree_height(root->left); //variável que recebe a altura da subárvore esquerda
-        int r = tree_height(root->right); //variável que recebe a altura da subárvore direita
+        int l = tree_height(root->left); //variável que recebe a altura da subárvore esquerda (l = left)
+        int r = tree_height(root->right); //variável que recebe a altura da subárvore direita (r = right)
         if(l > r)
         {
             return l + 1;
@@ -191,6 +191,102 @@ int tree_height(Node *root)
             return r + 1;
         }
     }
+}
+
+//Função que retorna o maior entre dois valores
+int largest_value(int a, int b)
+{
+    if(a > b)
+    {
+        return a;
+    }
+    else
+    {
+        return b;
+    }
+}
+
+//Função responsável por calcular e retornar o fator de balanceamento
+int balancing_factor(Node *node)
+{
+    if(node)
+    {
+        return (node_height(node->left) - node_height(node->right)); 
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+//Função de rotação esquerda
+Node *left_rotation(Node *root)
+{
+    Node *newRoot, *son;
+
+    newRoot = root->right;
+    son = newRoot->left;
+    newRoot->left = root;
+    root->right = son;
+
+    root->height = largest_value(node_height(root->left), node_height(root->right)) + 1;
+    newRoot->height = largest_value(node_height(newRoot->left), node_height(newRoot->right)) + 1;
+
+    return newRoot;
+}
+
+//Função de rotação direita
+Node *right_rotation(Node *root)
+{
+    Node *newRoot, *son;
+
+    newRoot = root->left;
+    son = newRoot->right;
+    newRoot->right = root;
+    root->left = son;
+
+    root->height = largest_value(node_height(root->left), node_height(root->right)) + 1;
+    newRoot->height = largest_value(node_height(newRoot->left), node_height(newRoot->right)) + 1;
+
+    return newRoot;
+}
+
+//Função rotação dupla 1 (esquerda-direita)
+Node *leftRight_rotation(Node *root)
+{
+    root->left = left_rotation(root->left);
+    return right_rotation(root);
+}
+
+//Função rotação dupla 2  (direita-esquerda)
+Node *rightLeft_rotation(Node *root)
+{
+    root->right = right_rotation(root->right);
+    return left_rotation(root);
+}
+
+//Função responsável por balancear a árvore após inserir ou remover um elemento
+Node *balancing(Node *root)
+{
+    int bf = balancing_factor(root);
+    if(bf < -1 && balancing_factor(root->right) <= 0)
+    {
+        root = left_rotation(root);
+    } 
+    else if(bf > 1 && balancing_factor(root->left) >= 0)
+    {
+        root = right_rotation(root);
+    }
+    else if(bf > 1 && balancing_factor(root->left) < 0)
+    {
+        root = leftRight_rotation(root);
+    }
+    else if(bf < -1 && balancing_factor(root->right) > 0)
+    {
+        root = rightLeft_rotation(root);
+    }
+
+    return root;
 }
 
 //Função responsável por iniciar os testes;
