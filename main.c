@@ -121,8 +121,8 @@ Node *remove_doctor(Node *root, int chave)
         }
 
         //Depende da parte de altura pronta;
-        root->height = //Incompleto;
-        root = balance(root);
+        //root->height =
+        //root = balance(root);
 
         return root;
     }
@@ -170,10 +170,39 @@ int search_doctor(Node *root, unsigned int key){
 };
 
 //Função responsável por calcular a altura de um nó da árvore;
-//short node_height();
+short node_height(Node *node)
+{
+    if(node == NULL)
+    {
+        return -1;
+    }
+    else
+    {
+        return node->height;
+    }
+}
 
 //Função responsável por retornar a altura da árvore;
-//int tree_height();
+int tree_height(Node *root)
+{
+    if(root == NULL)
+    {
+        return -1;
+    }
+    else
+    {
+        int l = tree_height(root->left); //variável que recebe a altura da subárvore esquerda
+        int r = tree_height(root->right); //variável que recebe a altura da subárvore direita
+        if(l > r)
+        {
+            return l + 1;
+        }
+        else
+        {
+            return r + 1;
+        }
+    }
+}
 
 //Função responsável por iniciar os testes;
 //void test();
@@ -228,7 +257,7 @@ int main(){
                 break;
             
             case 4:
-            		//tree_height();
+                    printf("Altura da arvore: %d\n", node_height(no));
                 break;
 
             case 5:
