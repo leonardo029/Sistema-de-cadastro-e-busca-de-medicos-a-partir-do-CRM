@@ -184,6 +184,7 @@ void register_doctor(Node **root, int crm){
 
         printf("Insira o telefone do medico. Modelo: DDD9XXXXXXXX\n");
         scanf("%lf", &(*root)->phone);
+        printf("\n");
 
     }
 
@@ -210,7 +211,7 @@ Node *remove_doctor(Node *root, int key)
 {
     if (root == NULL) //Verifica se a raiz é nula caso seja, notifica o erro.
     {
-        printf("Médico não encontrado!\n\n");
+        printf("\nMedico nao encontrado!\n\n");
         return NULL;
     }
     else
@@ -219,8 +220,9 @@ Node *remove_doctor(Node *root, int key)
         {
             if (root->left == NULL && root->right == NULL)
             {
+                printf("\nMedico removido: %s\n", root->name_doctor);
+                printf("CRM: %d\n\n", root->CRM);
                 free(root);
-                printf("Médico removido!: %d ! \n", key);
                 return NULL;
             }
             else
@@ -234,7 +236,6 @@ Node *remove_doctor(Node *root, int key)
                     }
                     root->CRM = aux->CRM;
                     aux->CRM = key;
-                    printf("Médico alterado: %d ! \n", key);
                     root->left = remove_doctor(root->left, key);
                     return root;
 
@@ -250,8 +251,10 @@ Node *remove_doctor(Node *root, int key)
                     {
                         aux = root->right;
                     }
+
+                    printf("\nMedico removido: %s\n", root->name_doctor);
+                    printf("CRM: %d\n\n", root->CRM);
                     free(root);
-                    printf("Médico associado removido: %d !\n", key);
                     return aux;
                     
                 }
@@ -278,30 +281,6 @@ Node *remove_doctor(Node *root, int key)
 
 //Função responsável por iniciar os testes;
 //void test();
-
-/*
-//Função responsável por retornar a altura da árvore -> provavelmente será excluída;
-int tree_height(Node *root)
-{
-    if(root == NULL)
-    {
-        return -1;
-    }
-    else
-    {
-        int l = tree_height(root->left); //variável que recebe a altura da subárvore esquerda (l = left)
-        int r = tree_height(root->right); //variável que recebe a altura da subárvore direita (r = right)
-        if(l > r)
-        {
-            return l + 1;
-        }
-        else
-        {
-            return r + 1;
-        }
-    }
-}
-*/
 
 //Função responsável por printar o menu de opções do programa;
 void print_menu(){
@@ -332,7 +311,7 @@ int main(){
         switch(option){
 
             case 0:
-                printf("\nObrigado por utilizar nosso sistema!\nAte logo!\n\n");
+                printf("Obrigado por utilizar nosso sistema!\nAte logo!\n\n");
                 break;
 
             case 1:
@@ -342,9 +321,9 @@ int main(){
                 break;
             
             case 2:
-                    printf("Insira o CRM do médico a ser removido:\n");    
+                    printf("Insira o CRM do medico a ser removido:\n");    
                     scanf("%d", &remove_crm);         
-            		remove_doctor(no, remove_crm);
+            		no = remove_doctor(no, remove_crm);
                 break;
 
             case 3:
@@ -361,7 +340,7 @@ int main(){
                     }
                     else
                     {
-                        printf("Altura da arvore (node_height): %d\n\n", node_height(no));
+                        printf("Altura da arvore: %d\n\n", node_height(no));
                     }
                 break;
 
@@ -370,7 +349,7 @@ int main(){
                 break;
 
             default:
-                printf("\nErro!!\nA opcao selecionada nao existe. Tente novamente!!\n\n");
+                printf("Erro!!\nA opcao selecionada nao existe. Tente novamente!!\n\n");
 
         }
 
