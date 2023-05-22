@@ -282,6 +282,120 @@ Node *remove_doctor(Node *root, int key)
 //Função responsável por iniciar os testes;
 //void test();
 
+void register_doctor2(Node **root, int crm, const char* name_doctor, double cpf, const char* specialty, double phone) {
+    if (*root == NULL) {
+        *root = (Node*)malloc(sizeof(Node));
+        (*root)->CRM = crm;
+        (*root)->right = NULL;
+        (*root)->left = NULL;
+        (*root)->height = 0;
+
+        strcpy((*root)->name_doctor, name_doctor);
+        (*root)->cpf = cpf;
+        strcpy((*root)->specialty, specialty);
+        (*root)->phone = phone;
+
+        printf("Registro do médico concluído.\n");
+    } else {
+        if (crm < (*root)->CRM) {
+            register_doctor2(&((*root)->left), crm, name_doctor, cpf, specialty, phone);
+        } else if (crm > (*root)->CRM) {
+            register_doctor2(&((*root)->right), crm, name_doctor, cpf, specialty, phone);
+        } else {
+            printf("\nO CRM inserido já consta em nosso banco de dados!\n\n");
+        }
+    }
+
+    (*root)->height = largest_value(node_height((*root)->left), node_height((*root)->right)) + 1;
+    *root = balancing(*root);
+    
+}
+
+void process_test_file(const char* filename, Node **root) {
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo de teste: %s\n", filename);
+        return;
+    }
+
+    int numTests = 0;
+    int crm = (*root)->CRM;
+    int option;
+    double cpf = (*root)->cpf, phone = (*root)->phone;
+    int verifica=0; 
+    float porcentagem, casos = 0, casoscertos = 0;
+
+    while (!feof(file)) {
+        if (fscanf(file, "%d", &option) != 1) {
+            printf("Erro ao ler a opção do arquivo de teste\n");
+            casos++;
+            break;
+        }
+        switch (option) {
+            case 1: {
+                char cpfString[20];  // Armazena o CPF como uma string
+                char phoneString[20];  // Armazena o número de telefone como uma string
+
+                int numAssigned = fscanf(file, "%d %s %s %s %s", &crm, (*root)->name_doctor, cpfString, (*root)->specialty, phoneString);
+                if (numAssigned != 5) {
+                    if (ferror(file)) {
+                        printf("Erro de leitura do arquivo de teste no caso 1: ocorreu um erro durante a leitura\n");
+                    } else if (feof(file)) {
+                        printf("Erro de leitura do arquivo de teste no caso 1: fim de arquivo atingido inesperadamente\n");
+                    } else {
+                        printf("Erro de leitura do arquivo de teste no caso 1: atribuições bem-sucedidas: %d\n", numAssigned);
+                    }
+
+                    break;
+                }
+
+                sscanf(cpfString, "%lf", &cpf);  // Converte a string do CPF para double
+                sscanf(phoneString, "%lf", &phone);  // Converte a string do número de telefone para double
+
+                printf("CRM: %d\nNome: %s\nCPF: %.0lf\nEspecialidade: %s\nTelefone: %.0lf\n", crm, (*root)->name_doctor, cpf, (*root)->specialty, phone);
+                register_doctor2(root, crm, (*root)->name_doctor, cpf, (*root)->specialty, phone);
+                casoscertos++;
+                break;
+            }
+
+            case 2:
+                if (fscanf(file, "%d", &crm) != 1) {
+                    printf("Erro ao ler os dados do caso 2 do arquivo de teste\n");
+                    verifica++;
+                    break;
+                }
+                *root = remove_doctor(*root, crm);
+                break;
+
+            case 3:
+                if (fscanf(file, "%d", &crm) != 1) {
+                    printf("Erro ao ler os dados do caso 3 do arquivo de teste\n");
+                    break;
+                }
+                search_doctor(*root, crm);
+                break;
+
+            default:
+                printf("Opção inválida no arquivo de teste\n");
+                printf("%d\n", option);
+                casos++;
+                break;
+        }
+
+        numTests++;
+    }
+
+    porcentagem = (float)(casoscertos/(casos+casoscertos))*100;
+    printf("Porcentagem de casos que entraram na busca: %.2f %%\n", porcentagem);
+    printf("Todos os testes foram realizados com sucesso!\n");
+    printf("Total de testes: %d\n", numTests);
+
+    fclose(file);
+}
+
+
+
+
 //Função responsável por printar o menu de opções do programa;
 void print_menu(){
 
@@ -345,7 +459,7 @@ int main(){
                 break;
 
             case 5:
-            		//test();
+            		process_test_file("test.txt", &no);
                 break;
 
             default:
