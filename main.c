@@ -1,3 +1,4 @@
+//Bibliotecas em uso;
 #include <stdlib.h>
 #include <stdio.h>
 #include <locale.h>
@@ -21,12 +22,13 @@ typedef struct node{
 
 //Função responsável por procurar um médico já cadastrado;
 void search_doctor(Node *root, int key){
-
+    //Confere se a raiz/árvore está vazia;
 	if(root == NULL){
         printf("\nMedico nao encontrado em nosso banco de dados!\n\n");
     }
-  
+
     else{
+        //Caso o CRM da raiz da subárvore cadastrado na struct corresponder com a chave de busca recebida na main, os dados dele serão impressos;
         if(root->CRM == key){
 
             printf("\nMedico encontrado!\n\n");
@@ -38,9 +40,11 @@ void search_doctor(Node *root, int key){
 
         }
         else{
+            //Caso a chave de busca for menor, há a recursão da função de busca para o nó a esquerda;
             if(key < root->CRM){
                 search_doctor(root->left, key);
             }
+            //Caso a chave de busca for maior, há a recursão da função de busca para o nó a direita;
             else{
                 search_doctor(root->right, key);
             }
@@ -52,10 +56,12 @@ void search_doctor(Node *root, int key){
 //Função responsável por calcular a altura de um nó da árvore (usar para auxiliar em outras funções);
 int node_height(Node *node)
 {
+    //Verifica se está vazio;
     if(node == NULL)
     {
         return -1;
     }
+    //Se não estiver vazio, retorna a altura;
     else
     {
         return node->height;
@@ -64,7 +70,7 @@ int node_height(Node *node)
 
 
 
-//Função que retorna o maior entre dois valores
+//Função que retorna o maior entre dois valores (autoexplicativo);
 int largest_value(int a, int b)
 {
     if(a > b)
@@ -77,11 +83,13 @@ int largest_value(int a, int b)
     }
 }
 
-//Função responsável por calcular e retornar o fator de balanceamento
+//Função responsável por calcular e retornar o fator de balanceamento;
 int balancing_factor(Node *node)
 {
+    //Verifica a existência do nó;
     if(node)
     {
+        //Cálculo do fator de balanceamento que é a diferença entre altura da subárvore esquerda e direita;
         return (node_height(node->left) - node_height(node->right)); 
     }
     else
@@ -90,23 +98,31 @@ int balancing_factor(Node *node)
     }
 }
 
-//Função de rotação esquerda
+//Função de rotação esquerda para reequilibrar a estrutura (atualiza nós e alturas);
 Node *left_rotation(Node *root)
 {
+    //Cria os ponteiros para o nós a seguir;
     Node *newRoot, *son;
 
+    //newRoot recebe o filho a direita
     newRoot = root->right;
+    //son recebe o filho a esquerda de newRoot;
     son = newRoot->left;
+    //Atualiza o ponteiro root;
     newRoot->left = root;
+    //Atualiza o ponteiro direita;
     root->right = son;
 
+    //Atualização das alturas com o cálculo delas;
     root->height = largest_value(node_height(root->left), node_height(root->right)) + 1;
     newRoot->height = largest_value(node_height(newRoot->left), node_height(newRoot->right)) + 1;
-
+     
+    //Novo nó atualizado;
     return newRoot;
 }
 
-//Função de rotação direita
+//Função de rotação direita para reequilibrar a estrutura (atualiza nós e alturas);
+//Mesmo processo da anterior;
 Node *right_rotation(Node *root)
 {
     Node *newRoot, *son;
@@ -122,23 +138,26 @@ Node *right_rotation(Node *root)
     return newRoot;
 }
 
-//Função rotação dupla 1 (esquerda-direita)
+//Função rotação dupla 1 (esquerda-direita);
+//Combinação de rotações necessárias quando um nó e sua subárvore desbalanceia tanto para esquerda quanto para a direita;
 Node *leftRight_rotation(Node *root)
 {
     root->left = left_rotation(root->left);
     return right_rotation(root);
 }
 
-//Função rotação dupla 2  (direita-esquerda)
+//Função rotação dupla 2  (direita-esquerda);
 Node *rightLeft_rotation(Node *root)
 {
     root->right = right_rotation(root->right);
     return left_rotation(root);
 }
 
-//Função responsável por balancear a árvore após inserir ou remover um elemento
+//Função responsável por balancear a árvore após inserir ou remover um elemento;
 Node *balancing(Node *root)
 {
+    //Utiliza o fator de balanceamento e as rotações em conjunto para equilibrar tudo;
+    //Cada condição desencadeia uma rotação necessária com base no fator de balanceamento;
     int bf = balancing_factor(root);
     if(bf < -1 && balancing_factor(root->right) <= 0)
     {
@@ -162,15 +181,15 @@ Node *balancing(Node *root)
 
 //Função responsável por cadastrar um novo médico;
 void register_doctor(Node **root, int crm){
-
+    //Verificação lacuna na raiz;
     if(*root == NULL){
-
+        //Alocação dinâmica da struct para possibilitar alteração em tempo de execução;
         *root = (Node*) malloc(sizeof(Node));
         (*root)->CRM = crm;
         (*root)->right = NULL;
         (*root)->left = NULL;
         (*root)->height = 0;
-
+        //Sintaxe para capturar os dados;
         printf("Insira o nome do medico:\n");
         getchar();
         scanf("%[^\n]", (*root)->name_doctor);
@@ -187,7 +206,9 @@ void register_doctor(Node **root, int crm){
         printf("\n");
 
     }
-
+    //Processo para caso já haja uma raiz;
+    //Insere elementos maiores a direita e menores a esquerda;
+    //Trata erro de repetição;
     else{
         if(crm < ((*root)->CRM)){
             register_doctor(&((*root)->left), crm);
@@ -200,22 +221,24 @@ void register_doctor(Node **root, int crm){
         }
     }
 
-    //Recalcula a altura da árvore 
+    //Recalcula a altura da árvore ;
     (*root)->height = largest_value(node_height((*root)->left), node_height((*root)->right)) + 1;
-    //Verifica a necessidade de balancear a árvore e executa se for o caso
+    //Verifica a necessidade de balancear a árvore e executa se for o caso;
     *root = balancing(*root);
 }
 
 //Função responsável por descadastrar um médico;
 Node *remove_doctor(Node *root, int key)
 {
-    if (root == NULL) //Verifica se a raiz é nula caso seja, notifica o erro.
+    if (root == NULL) //Verifica se a raiz é nula caso seja, notifica o erro;
     {
         printf("\nMedico nao encontrado!\n\n");
         return NULL;
     }
+    //Início dos processos de remoção;
     else
     {
+        //Caso o nó bater com a chave e não houver filhos;
         if (root->CRM == key)
         {
             if (root->left == NULL && root->right == NULL)
@@ -225,10 +248,12 @@ Node *remove_doctor(Node *root, int key)
                 free(root);
                 return NULL;
             }
+            //Caso o nó bater com a chave e houver os dois filhos;
             else
             {
                 if (root->left != NULL && root->right != NULL)
                 {
+                    //Utilização de auxiliares para salvar os valores dos filhos do nó a ser removido;
                     Node *aux = root->left;
                     while (aux->right != NULL)
                     {
@@ -240,6 +265,7 @@ Node *remove_doctor(Node *root, int key)
                     return root;
 
                 }
+                //Caso haja apenas um filho;
                 else
                 {
                     Node *aux;
@@ -262,6 +288,7 @@ Node *remove_doctor(Node *root, int key)
         }
         else
         {
+            //Orientação para qual subárvore a função de remoção deve passar;
             if (key < root->CRM)
             {
                 root->left = remove_doctor(root->left, key);
@@ -272,6 +299,7 @@ Node *remove_doctor(Node *root, int key)
             }
         }
 
+        //Atualiza a altura e balanceia após as remoções;
         root->height = largest_value(node_height(root->left), node_height(root->right)) + 1;
         root = balancing(root);
 
@@ -282,6 +310,7 @@ Node *remove_doctor(Node *root, int key)
 //Função responsável por iniciar os testes;
 //void test();
 
+//Função de registro clonada para possibilitar automação de testes;
 void register_doctor2(Node **root, int crm, const char* name_doctor, double cpf, const char* specialty, double phone) {
     if (*root == NULL) {
         *root = (Node*)malloc(sizeof(Node));
@@ -311,6 +340,7 @@ void register_doctor2(Node **root, int crm, const char* name_doctor, double cpf,
     
 }
 
+//Função para abertura do arquivo txt, teste e tratamento de erros;
 void process_test_file(const char* filename, Node **root) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
@@ -333,8 +363,8 @@ void process_test_file(const char* filename, Node **root) {
         }
         switch (option) {
             case 1: {
-                char cpfString[20];  // Armazena o CPF como uma string
-                char phoneString[20];  // Armazena o número de telefone como uma string
+                char cpfString[20];  // Armazena o CPF como uma string;
+                char phoneString[20];  // Armazena o número de telefone como uma string;
 
                 int numAssigned = fscanf(file, "%d %s %s %s %s", &crm, (*root)->name_doctor, cpfString, (*root)->specialty, phoneString);
                 if (numAssigned != 5) {
@@ -349,8 +379,8 @@ void process_test_file(const char* filename, Node **root) {
                     break;
                 }
 
-                sscanf(cpfString, "%lf", &cpf);  // Converte a string do CPF para double
-                sscanf(phoneString, "%lf", &phone);  // Converte a string do número de telefone para double
+                sscanf(cpfString, "%lf", &cpf);  // Converte a string do CPF para double;
+                sscanf(phoneString, "%lf", &phone);  // Converte a string do número de telefone para double;
 
                 printf("CRM: %d\nNome: %s\nCPF: %.0lf\nEspecialidade: %s\nTelefone: %.0lf\n", crm, (*root)->name_doctor, cpf, (*root)->specialty, phone);
                 register_doctor2(root, crm, (*root)->name_doctor, cpf, (*root)->specialty, phone);
@@ -385,6 +415,7 @@ void process_test_file(const char* filename, Node **root) {
         numTests++;
     }
 
+    //Cálculo de acerto do sistema e quantidade de testes;
     porcentagem = (float)(casoscertos/(casos+casoscertos))*100;
     printf("Porcentagem de casos que entraram na busca: %.2f %%\n", porcentagem);
     printf("Todos os testes foram realizados com sucesso!\n");
@@ -422,6 +453,7 @@ int main(){
         scanf("%d",&option);
         printf("\n");
 
+        //Implementação das oppções do menu e captura de dados de entrada no teclado;
         switch(option){
 
             case 0:
@@ -459,10 +491,17 @@ int main(){
                 break;
 
             case 5:
+                    //Tratamento do erro de árvore vazia;
+                    if(no == NULL){
+                    printf("A Arvore esta vazia. Adicione Medicos antes de executar o teste!\n\n");
+                    //Teste com banco de dados em aquivo txt;
+                }else{
             		process_test_file("test.txt", &no);
+                }
                 break;
 
             default:
+                //Tratamento de erro;
                 printf("Erro!!\nA opcao selecionada nao existe. Tente novamente!!\n\n");
 
         }
