@@ -295,7 +295,7 @@ void register_doctor2(Node **root, int crm, const char* name_doctor, double cpf,
         strcpy((*root)->specialty, specialty);
         (*root)->phone = phone;
 
-        printf("Registro do médico concluído.\n");
+        printf("\nRegistro do médico concluído.\n");
     } else {
         if (crm < (*root)->CRM) {
             register_doctor2(&((*root)->left), crm, name_doctor, cpf, specialty, phone);
@@ -314,7 +314,7 @@ void register_doctor2(Node **root, int crm, const char* name_doctor, double cpf,
 void process_test_file(const char* filename, Node **root) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Erro ao abrir o arquivo de teste: %s\n", filename);
+        printf("\nErro ao abrir o arquivo de teste: %s\n\n", filename);
         return;
     }
 
@@ -327,7 +327,7 @@ void process_test_file(const char* filename, Node **root) {
 
     while (!feof(file)) {
         if (fscanf(file, "%d", &option) != 1) {
-            printf("Erro ao ler a opção do arquivo de teste\n");
+            printf("Erro ao ler a opcao do arquivo de teste\n");
             casos++;
             break;
         }
@@ -388,7 +388,7 @@ void process_test_file(const char* filename, Node **root) {
     porcentagem = (float)(casoscertos/(casos+casoscertos))*100;
     printf("Porcentagem de casos que entraram na busca: %.2f %%\n", porcentagem);
     printf("Todos os testes foram realizados com sucesso!\n");
-    printf("Total de testes: %d\n", numTests);
+    printf("Total de testes: %d\n\n", numTests);
 
     fclose(file);
 }
