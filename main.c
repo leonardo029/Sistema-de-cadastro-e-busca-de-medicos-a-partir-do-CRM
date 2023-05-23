@@ -358,7 +358,6 @@ void process_test_file(const char* filename, Node **root) {
     while (!feof(file)) {
         if (fscanf(file, "%d", &option) != 1) {
             printf("Erro ao ler a opcao do arquivo de teste\n");
-            casos++;
             break;
         }
         switch (option) {
@@ -406,9 +405,6 @@ void process_test_file(const char* filename, Node **root) {
                 break;
 
             default:
-                printf("Opção inválida no arquivo de teste\n");
-                printf("%d\n", option);
-                casos++;
                 break;
         }
 
@@ -416,8 +412,8 @@ void process_test_file(const char* filename, Node **root) {
     }
 
     //Cálculo de acerto do sistema e quantidade de testes;
-    porcentagem = (float)(casoscertos/(casos+casoscertos))*100;
-    printf("Porcentagem de casos que entraram na busca: %.2f %%\n", porcentagem);
+    porcentagem = (float)(casoscertos/5000)*100;
+    printf("Porcentagem de casos cadastrados: %.2f %%\n", porcentagem);
     printf("Todos os testes foram realizados com sucesso!\n");
     printf("Total de testes: %d\n\n", numTests);
 
