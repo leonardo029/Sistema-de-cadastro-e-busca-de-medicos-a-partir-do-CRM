@@ -353,7 +353,7 @@ void process_test_file(const char* filename, Node **root) {
     int option;
     double cpf = (*root)->cpf, phone = (*root)->phone;
     int verifica=0; 
-    float porcentagem, casos = 0, casoscertos = 0;
+    float porcentagem, casoscertos = 0;
 
     while (!feof(file)) {
         if (fscanf(file, "%d", &option) != 1) {
