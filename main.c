@@ -413,7 +413,7 @@ void process_test_file(const char* filename, Node **root) {
 
     //Cálculo de acerto do sistema e quantidade de testes;
     porcentagem = (float)(casoscertos/5000)*100;
-    printf("Porcentagem de casos cadastrados: %.2f %%\n", porcentagem);
+    printf("\nPorcentagem de casos cadastrados: %.2f %%\n", porcentagem);
     printf("Todos os testes foram realizados com sucesso!\n");
     printf("Total de testes: %d\n\n", numTests);
 
